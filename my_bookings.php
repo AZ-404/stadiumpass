@@ -108,6 +108,19 @@ require_once __DIR__ . '/includes/header.php';
 
     <h1 class="page-title">My Bookings</h1>
 
+    <!-- Stadium Seat View Interactive Preview -->
+    <div class="card" style="margin-bottom: 1.5rem; text-align: center; background: #0f172a; color: #fff; padding: 1rem; border-radius: 10px;">
+      <div id="stand-preview-title" style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.5rem; color: #cbd5e1;">
+        Hover over any booking or seat to preview stadium view
+      </div>
+      <div style="width: 100%; height: 240px; max-width: 650px; margin: 0 auto; overflow: hidden; border-radius: 8px; border: 1px solid #334155;">
+        <img id="stadium-view-img" 
+             src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80" 
+             alt="Stadium View Preview" 
+             style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.2s ease-in-out;">
+      </div>
+    </div>
+
     <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
     <?php if ($error):   ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
@@ -169,5 +182,40 @@ require_once __DIR__ . '/includes/header.php';
         <?php endif; ?>
       </div>
     <?php endforeach; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Direct Online Image URLs for Stand Preview
+    const standImages = {
+        'VIP': 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80',
+        'North': 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80',
+        'South': 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80'
+    };
+
+    const previewImg = document.getElementById('stadium-view-img');
+    const previewTitle = document.getElementById('stand-preview-title');
+
+    if (!previewImg) return;
+
+    const cardsAndRows = document.querySelectorAll('.card, tr');
+
+    cardsAndRows.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            const text = this.innerText;
+            for (let stand in standImages) {
+                if (text.includes(stand)) {
+                    previewImg.style.opacity = '0.3';
+                    setTimeout(() => {
+                        previewImg.src = standImages[stand];
+                        previewImg.style.opacity = '1';
+                        if (previewTitle) previewTitle.innerText = 'View from: ' + stand + ' Stand';
+                    }, 100);
+                    break;
+                }
+            }
+        });
+    });
+});
+</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
