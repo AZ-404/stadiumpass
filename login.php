@@ -37,6 +37,7 @@ require_once __DIR__ . '/includes/header.php';
   <?php if ($error): ?>
     <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
   <?php endif; ?>
+  
   <form method="post" action="login.php">
     <div class="form-group">
       <label for="email">Email</label>
@@ -48,6 +49,19 @@ require_once __DIR__ . '/includes/header.php';
     </div>
     <button type="submit" class="btn" style="width: 100%; margin-top: 0.5rem;">Login</button>
   </form>
+
+  <!-- هنا مكان الكود بالظبط -->
+  <div style="margin: 1.25rem 0; text-align: center; color: #94a3b8; font-size: 0.875rem;">
+    OR
+  </div>
+
+  <!-- Google Sign In Button -->
+  <a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=11470106458-70arf70ctjej1l4p7pemskmim7f9ol4k.apps.googleusercontent.com&redirect_uri=http://localhost/stadiumpass/google-callback.php&response_type=code&scope=email%20profile" 
+     style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff; color: #334155; font-weight: 600; text-decoration: none; box-sizing: border-box;">
+    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style="width: 18px; height: 18px;">
+    Sign in with Google
+  </a>
+
   <p style="margin-top: 1.25rem; text-align: center; color: #64748b;">
     Don't have an account? <a href="register.php" style="color: var(--green); font-weight: 600;">Register here</a>
   </p>
