@@ -1,0 +1,133 @@
+/* ===== Shared styles for Stadium Pass (Rahaf) ===== */
+:root {
+  --navy: #0f172a;
+  --green: #10b981;
+  --green-hover: #059669;
+  --white: #ffffff;
+  --black: #1e293b;
+  --bg-light: #f8fafc;
+  --border: #e2e8f0;
+  --danger: #ef4444;
+  --warn: #f59e0b;
+  --muted: #64748b;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, Arial, sans-serif; }
+body { background: var(--bg-light); color: var(--black); display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ---- Top menu ---- */
+.site-header { background: var(--navy); color: var(--white); padding: 1rem 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1); }
+.nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .75rem; }
+.brand-logo { font-size: 1.5rem; font-weight: 800; color: var(--white); text-decoration: none; }
+.brand-logo span { color: var(--green); }
+.nav-links { display: flex; gap: 1.25rem; list-style: none; align-items: center; flex-wrap: wrap; }
+.nav-links a { color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: .95rem; transition: color .2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--green); }
+.nav-user { color: #94a3b8; font-size: .9rem; }
+.btn-nav-outline { border: 1px solid var(--green); color: var(--green) !important; padding: .4rem .9rem; border-radius: 6px; font-weight: 600; }
+.btn-nav-outline:hover { background: var(--green); color: var(--white) !important; }
+
+/* ---- Page ---- */
+.main-content { max-width: 1200px; width: 100%; margin: 2rem auto; padding: 0 1rem; flex: 1; }
+.page-title { font-size: 2rem; font-weight: 800; color: var(--navy); margin-bottom: 1.5rem; }
+.card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,.04); }
+.card h2 { font-size: 1.15rem; color: var(--navy); margin-bottom: 1rem; }
+
+/* ---- Buttons ---- */
+.btn { display: inline-block; background: var(--green); color: var(--white); border: 0; padding: .6rem 1rem; border-radius: 8px; font-weight: 600; font-size: .95rem; text-decoration: none; cursor: pointer; transition: background .2s; }
+.btn:hover { background: var(--green-hover); }
+.btn-secondary { background: #475569; }
+.btn-secondary:hover { background: #334155; }
+.btn-danger { background: var(--danger); }
+.btn-danger:hover { background: #dc2626; }
+.btn-small { padding: .35rem .7rem; font-size: .85rem; }
+.inline-form { display: inline; }
+
+/* ---- Forms ---- */
+.form-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end; }
+.form-group { margin-bottom: 1rem; flex: 1; min-width: 160px; }
+.form-group label { display: block; font-weight: 600; margin-bottom: .4rem; color: var(--navy); font-size: .9rem; }
+.form-control { width: 100%; padding: .65rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; background: var(--white); }
+.form-control:focus { outline: 2px solid var(--green); border-color: var(--green); }
+
+/* ---- Tables ---- */
+.table-wrap { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; }
+table.data th, table.data td { padding: .7rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+table.data th { background: #eef2f6; color: var(--navy); font-size: .9rem; }
+table.data tr.total td { font-weight: 700; background: #f1f5f9; }
+
+/* ---- Messages ---- */
+.alert { padding: .9rem 1rem; border-radius: 8px; margin-bottom: 1.25rem; }
+.alert-success { background: #d4edda; color: #155724; }
+.alert-danger  { background: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
+.alert-info    { background: #e0f2fe; color: #075985; }
+
+/* ---- Badges ---- */
+.badge { display: inline-block; padding: .2rem .6rem; border-radius: 9999px; font-size: .8rem; font-weight: 700; }
+.badge-confirmed, .badge-valid, .badge-upcoming { background: #d4edda; color: #155724; }
+.badge-cancelled { background: #fee2e2; color: #991b1b; }
+.badge-used, .badge-finished { background: #e2e8f0; color: #475569; }
+
+/* ---- Occupancy bar (reports) ---- */
+.bar { background: #e2e8f0; border-radius: 9999px; height: 10px; width: 120px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: .5rem; }
+.bar > span { display: block; height: 100%; background: var(--green); }
+
+/* ---- Footer ---- */
+.site-footer { background: var(--navy); color: #94a3b8; text-align: center; padding: 1.5rem; margin-top: auto; border-top: 1px solid #1e293b; }
+
+/* ---- Ticket (Malak) ---- */
+.ticket { max-width: 640px; margin: 0 auto; background: var(--white); border: 2px dashed var(--navy); border-radius: 16px; overflow: hidden; }
+.ticket-head { background: var(--navy); color: var(--white); padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.ticket-head .brand { font-weight: 800; font-size: 1.2rem; }
+.ticket-head .brand span { color: var(--green); }
+.ticket-teams { text-align: center; font-size: 1.6rem; font-weight: 800; color: var(--navy); padding: 1.25rem 1rem .25rem; }
+.ticket-teams .vs { color: var(--green); font-size: 1rem; margin: 0 .5rem; }
+.ticket-body { display: flex; gap: 1.5rem; padding: 1rem 1.5rem 1.5rem; flex-wrap: wrap; align-items: center; justify-content: center; }
+.ticket-info { flex: 1; min-width: 220px; }
+.ticket-info dt { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; margin-top: .6rem; }
+.ticket-info dd { font-weight: 700; font-size: 1.05rem; color: var(--navy); }
+.ticket-qr { text-align: center; }
+.ticket-qr img, .ticket-qr canvas { display: block; margin: 0 auto; }
+.ticket-qr small { display: block; margin-top: .4rem; color: var(--muted); font-family: monospace; }
+.ticket-void { text-align: center; padding: 1rem; background: #fee2e2; color: #991b1b; font-weight: 700; }
+
+/* ---- Booking & Matches Grid ---- */
+.btn-primary { display: block; width: 100%; background: var(--green); color: var(--white); border: none; padding: 0.75rem 1rem; border-radius: 8px; font-weight: 600; text-align: center; text-decoration: none; cursor: pointer; transition: background 0.2s; }
+.btn-primary:hover { background: var(--green-hover); }
+
+.matches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+.match-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+.teams-vs { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.2rem; color: var(--navy); margin-bottom: 1rem; }
+.vs-badge { background: var(--green); color: var(--white); font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 9999px; }
+.match-info { color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+/* ---- Stadium & Seats Selection ---- */
+.stadium-container { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 6rem; }
+.section-block { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+.section-header { font-weight: 700; color: var(--navy); margin-bottom: 1rem; display: flex; justify-content: space-between; }
+.seats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 0.5rem; }
+.seat-btn { width: 100%; aspect-ratio: 1; border: 1px solid var(--border); border-radius: 6px; background-color: #f1f5f9; color: var(--black); font-weight: 600; cursor: pointer; font-size: 0.85rem; }
+.seat-btn.available:hover { border-color: var(--green); color: var(--green); }
+.seat-btn.selected { background-color: var(--green) !important; color: var(--white) !important; border-color: var(--green) !important; }
+.seat-btn.booked { background-color: #e2e8f0; color: #94a3b8; cursor: not-allowed; text-decoration: line-through; }
+.booking-bar { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); width: calc(100% - 2rem); max-width: 1160px; background: var(--navy); color: var(--white); padding: 1rem 1.5rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); z-index: 100; }
+
+/* ---- Checkout Card ---- */
+.checkout-card { max-width: 550px; margin: 0 auto; background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--border); }
+
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  .site-header { padding: 1rem; }
+  .page-title { font-size: 1.5rem; }
+}
+
+/* ---- Print (ticket page) ---- */
+@media print {
+  body { background: #fff; }
+  .site-header, .site-footer, .no-print { display: none !important; }
+  .main-content { margin: 0; max-width: 100%; padding: 0; }
+  .ticket { border: 2px solid #000; page-break-inside: avoid; }
+  .ticket-head { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
