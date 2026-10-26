@@ -1,0 +1,13 @@
+/* Scroll-scrubbed hero video (appearance only). Active when html.video-hero is set by booking.php. */
+.hero-video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #030504;
+  opacity: 0; transition: opacity .7s ease;
+}
+html.video-ready .hero-video { opacity: 1; }
+html.video-hero #stage { display: none; }
+/* poster / CSS artwork shows until the video can be drawn, and permanently if it can't */
+html.video-hero:not(.video-ready) .hero-art { opacity: 1; }
+html.video-hero.video-ready .hero-art { opacity: 0; }
+html.video-hero.video-failed .hero-video { display: none; }
+html.video-hero.video-failed .hero-art { opacity: 1; }
+.hero-copy, .scroll-cue { will-change: transform, opacity; }

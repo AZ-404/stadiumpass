@@ -1,0 +1,78 @@
+/* =========================================================
+   Stadium Pass — cinematic intro video (appearance only)
+   Overlay is hidden unless the inline script in booking.php
+   adds html.has-intro (first visit this session, motion allowed).
+   ========================================================= */
+.intro { display: none; }
+
+html.has-intro { overflow: hidden; }
+html.has-intro .intro {
+  display: block; position: fixed; inset: 0; z-index: 200; background: #000; color: #fff;
+  opacity: 1; transition: opacity .9s ease; font-family: var(--body, system-ui, sans-serif);
+}
+.intro.is-leaving { opacity: 0; pointer-events: none; }
+
+/* Failsafe: if intro.js never starts (blocked / error) the overlay cannot trap the visitor. */
+html.has-intro:not(.intro-ready) { animation: introUnlock 0s 8s forwards; }
+html.has-intro:not(.intro-ready) .intro { animation: introGone 0s 8s forwards; }
+@keyframes introUnlock { to { overflow: auto; } }
+@keyframes introGone { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+
+.intro__bg {
+  position: absolute; inset: 0; background: radial-gradient(120% 80% at 70% 20%, #0d2a1e 0%, #060d09 55%, #000 100%) center / cover no-repeat;
+}
+.intro__video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000;
+  opacity: 0; transition: opacity .8s ease;
+}
+.intro.is-playing .intro__video { opacity: 1; }
+.intro__shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .55) 0%, rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, .78) 100%),
+    radial-gradient(120% 90% at 50% 45%, rgba(0, 0, 0, .1) 50%, rgba(0, 0, 0, .6) 100%);
+}
+/* last moments: ease into the dark homepage background */
+.intro.is-ending .intro__shade { background: #050806; transition: background 1s ease; }
+
+/* loading state */
+.intro__loader {
+  position: absolute; left: 50%; top: 50%; width: 180px; margin-left: -90px; text-align: center;
+  font-size: .68rem; letter-spacing: .34em; text-transform: uppercase; color: #cfe2d7; transition: opacity .4s;
+}
+.intro__loader i { display: block; height: 2px; margin-top: .9rem; background: rgba(255, 255, 255, .15); overflow: hidden; position: relative; }
+.intro__loader i::after {
+  content: ""; position: absolute; inset: 0; width: 40%; background: #22f58b; animation: introBar 1.2s ease-in-out infinite;
+}
+@keyframes introBar { 0% { transform: translateX(-100%); } 100% { transform: translateX(260%); } }
+.intro.is-playing .intro__loader, .intro.is-blocked .intro__loader { opacity: 0; visibility: hidden; }
+.intro:not(.is-loading) .intro__loader { display: none; }
+
+/* controls */
+.intro__btn {
+  position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: .6rem; cursor: pointer; border: 1px solid rgba(255, 255, 255, .35);
+  background: rgba(0, 0, 0, .35); color: #fff; font: 600 .74rem/1 var(--body, system-ui, sans-serif); letter-spacing: .18em; text-transform: uppercase;
+  padding: .85rem 1.3rem; border-radius: 999px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  transition: background .25s, color .25s, border-color .25s, transform .25s, opacity .5s;
+}
+.intro__btn:hover { background: #fff; color: #050806; border-color: #fff; }
+.intro__btn:focus-visible { outline: 2px solid #22f58b; outline-offset: 3px; }
+.intro__skip { top: max(1.2rem, env(safe-area-inset-top)); right: max(1.2rem, env(safe-area-inset-right)); }
+.intro__sound { left: max(1.2rem, env(safe-area-inset-left)); bottom: max(1.4rem, env(safe-area-inset-bottom)); }
+.intro__sound[hidden], .intro__play[hidden], .intro__enter[hidden] { display: none; }
+.intro__enter, .intro__play {
+  left: 50%; transform: translateX(-50%); background: #22f58b; color: #04110a; border-color: #22f58b; font-weight: 700; letter-spacing: .2em; padding: 1.05rem 2rem;
+}
+.intro__enter { bottom: max(1.4rem, env(safe-area-inset-bottom)); opacity: 0; pointer-events: none; }
+.intro__enter.is-in { opacity: 1; pointer-events: auto; }
+.intro__play { top: 50%; margin-top: -26px; }
+.intro__enter:hover, .intro__play:hover { background: #55ffa9; color: #04110a; transform: translateX(-50%) translateY(-2px); box-shadow: 0 14px 40px -10px rgba(34, 245, 139, .75); }
+
+@media (max-width: 640px) {
+  .intro__sound { bottom: auto; top: max(1.2rem, env(safe-area-inset-top)); }
+  .intro__btn { padding: .75rem 1.05rem; font-size: .68rem; }
+  .intro__enter { width: calc(100% - 2.4rem); justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.has-intro .intro, .intro__video { transition: none; }
+}
