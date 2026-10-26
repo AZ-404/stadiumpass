@@ -57,6 +57,17 @@ $page_title = match($action) {
     default => 'Upcoming Fixtures',
 };
 
+if ($action === 'matches') {
+    $body_class = 'home';
+    // Optional cinematic intro: only rendered when the video file has been uploaded.
+    $intro_video  = 'assets/videos/football-intro.mp4';
+    $intro_poster = 'assets/videos/football-intro-poster.jpg';
+    $show_video   = is_file(__DIR__ . '/' . $intro_video);   // scroll-scrubbed video inside the hero
+    $intro_overlay = false;                                   // set true to also show the skippable full-screen intro
+    $show_intro   = $show_video && $intro_overlay;
+    $has_poster   = is_file(__DIR__ . '/' . $intro_poster);
+}
+
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -79,31 +90,141 @@ if ($action === 'matches'):
     }
 ?>
 
-  <h1 class="page-title">Upcoming Fixtures</h1>
-  <div class="matches-grid">
-    <?php if (count($matches) > 0): ?>
-      <?php foreach ($matches as $match): ?>
-        <div class="match-card">
-          <div>
-            <div class="teams-vs">
-              <span><?= htmlspecialchars($match['home_team']); ?></span>
-              <span class="vs-badge">VS</span>
-              <span><?= htmlspecialchars($match['away_team']); ?></span>
-            </div>
-            <div class="match-info">
-              <p><strong>Date:</strong> <?= htmlspecialchars($match['match_date']); ?></p>
-              <p><strong>Time:</strong> <?= htmlspecialchars($match['match_time']); ?></p>
-            </div>
-          </div>
-          <a href="booking.php?action=seats&match_id=<?= $match['match_id']; ?>" class="btn-primary">
-            Select Seats
-          </a>
-        </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p>No upcoming matches scheduled right now.</p>
-    <?php endif; ?>
+<?php
+  // Display helpers only (no data access): crest initials + a stable hue per team name.
+  $crest_initials = function (string $name): string {
+      $words = preg_split('/\s+/u', trim($name), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+      $i = count($words) > 1
+          ? mb_substr($words[0], 0, 1) . mb_substr($words[count($words) - 1], 0, 1)
+          : mb_substr($name, 0, 3);
+      return mb_strtoupper($i);
+  };
+  $crest_hue = fn (string $name): int => crc32($name) % 360;
+?>
+
+<?php if (!empty($show_intro)): ?>
+  <script>(function(){var r=document.documentElement;try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&!sessionStorage.getItem('sp_intro_seen'))r.classList.add('has-intro');}catch(e){r.classList.add('has-intro');}})();</script>
+  <!-- INTRO VIDEO: shown once per browser session, skippable -->
+  <div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Stadium Pass intro" data-src="<?= htmlspecialchars($intro_video); ?>">
+    <div class="intro__bg"<?= $has_poster ? ' style="background-image:url(\'' . htmlspecialchars($intro_poster) . '\')"' : ''; ?>></div>
+    <video class="intro__video" muted playsinline preload="none" aria-hidden="true" tabindex="-1"<?= $has_poster ? ' poster="' . htmlspecialchars($intro_poster) . '"' : ''; ?>></video>
+    <div class="intro__shade"></div>
+    <div class="intro__loader" role="status">Loading<i></i></div>
+    <button type="button" class="intro__btn intro__skip" data-intro-skip>Skip intro</button>
+    <button type="button" class="intro__btn intro__sound" data-intro-sound aria-pressed="false" hidden><span>Sound off</span></button>
+    <button type="button" class="intro__btn intro__play" data-intro-play hidden>Play intro</button>
+    <button type="button" class="intro__btn intro__enter" data-intro-enter>Enter stadium</button>
   </div>
+<?php endif; ?>
+
+  <!-- HERO: scroll-controlled kick-off scene (canvas is progressive enhancement) -->
+  <section class="hero" data-hero aria-label="Stadium Pass introduction">
+    <div class="hero-stage">
+      <canvas id="stage" aria-hidden="true"></canvas>
+<?php if (!empty($show_video)): ?>
+      <script>document.documentElement.classList.add('video-hero');</script>
+      <video class="hero-video" muted playsinline preload="metadata" aria-hidden="true" tabindex="-1" data-src="<?= htmlspecialchars($intro_video); ?>"<?= $has_poster ? ' poster="' . htmlspecialchars($intro_poster) . '"' : ''; ?>></video>
+<?php endif; ?>
+      <div class="hero-art" aria-hidden="true"></div>
+      <div class="hero-vignette" aria-hidden="true"></div>
+      <div class="hero-speed" aria-hidden="true"></div>
+      <div class="hero-flash" aria-hidden="true"></div>
+      <div class="hero-fade" aria-hidden="true"></div>
+
+      <div class="hero-copy" data-hero-copy>
+        <p class="eyebrow"><span></span>Live football tickets</p>
+        <h1 class="hero-title">Your game.<br><em>Your moment.</em></h1>
+        <p class="hero-sub">Discover the next big match. Secure your seat. Feel the game.</p>
+        <a href="#fixtures" class="hero-cta" data-scroll-to="#fixtures">
+          Explore matches
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+
+      <div class="scroll-cue" data-scroll-cue aria-hidden="true"><i></i>Scroll to kick off</div>
+    </div>
+  </section>
+
+  <!-- FIXTURES -->
+  <section class="fixtures" id="fixtures">
+    <div class="fx-wrap">
+      <header class="fx-head" data-reveal>
+        <p class="eyebrow"><span></span>Upcoming fixtures<span></span></p>
+        <h2>The next big moment</h2>
+        <p>Your next unforgettable football experience starts here.</p>
+      </header>
+
+      <?php if (count($matches) > 0): ?>
+        <div class="fx-filters" data-filters hidden>
+          <label>Team
+            <select data-filter="team"><option value="">All teams</option></select>
+          </label>
+          <label>Date
+            <select data-filter="date"><option value="">All dates</option></select>
+          </label>
+          <button type="button" data-filter-reset>Reset</button>
+          <span class="fx-count" data-count></span>
+        </div>
+
+        <div class="fx-grid">
+          <?php foreach ($matches as $match):
+            $home = (string)$match['home_team'];
+            $away = (string)$match['away_team'];
+            $kick_ts = strtotime($match['match_date'] . ' ' . $match['match_time']);
+          ?>
+            <article class="fx-card"
+                     data-home="<?= htmlspecialchars($home); ?>"
+                     data-away="<?= htmlspecialchars($away); ?>"
+                     data-date="<?= htmlspecialchars($match['match_date']); ?>"
+                     data-kickoff="<?= $kick_ts ? date('Y-m-d\TH:i:s', $kick_ts) : ''; ?>">
+              <span class="fx-glow" aria-hidden="true"></span>
+              <div class="fx-top">
+                <span class="fx-badge" data-badge>Upcoming</span>
+                <span class="fx-feat">Featured fixture</span>
+              </div>
+
+              <div class="fx-teams">
+                <div class="fx-team">
+                  <span class="fx-crest" style="--h: <?= $crest_hue($home); ?>" aria-hidden="true"><b><?= htmlspecialchars($crest_initials($home)); ?></b></span>
+                  <strong><?= htmlspecialchars($home); ?></strong>
+                </div>
+                <div class="fx-vs"><span>VS</span></div>
+                <div class="fx-team">
+                  <span class="fx-crest" style="--h: <?= $crest_hue($away); ?>" aria-hidden="true"><b><?= htmlspecialchars($crest_initials($away)); ?></b></span>
+                  <strong><?= htmlspecialchars($away); ?></strong>
+                </div>
+              </div>
+
+              <div class="fx-meta">
+                <span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                  <?= htmlspecialchars($match['match_date']); ?>
+                </span>
+                <span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  <?= htmlspecialchars($match['match_time']); ?>
+                </span>
+              </div>
+
+              <div class="fx-count-down" data-countdown aria-hidden="true"></div>
+
+              <a href="booking.php?action=seats&match_id=<?= $match['match_id']; ?>" class="fx-cta">
+                Select seats
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </article>
+          <?php endforeach; ?>
+        </div>
+        <p class="fx-none" data-none hidden>No fixtures match those filters.</p>
+      <?php else: ?>
+        <div class="fx-empty" data-reveal>
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8l3.5 2.5-1.3 4h-4.4l-1.3-4zM12 3v5M20.5 9.5l-5-1M17.5 19l-3.3-4.5M6.5 19l3.3-4.5M3.5 9.5l5-1"/></svg>
+          <h3>No upcoming matches</h3>
+          <p>No upcoming matches scheduled right now. Check back soon, the next kick-off will land here.</p>
+        </div>
+      <?php endif; ?>
+    </div>
+  </section>
 
 <?php
 // SEAT SELECTION

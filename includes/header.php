@@ -18,8 +18,20 @@ $title = $page_title ?? 'Stadium Pass';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= htmlspecialchars($title) ?> - Stadium Pass</title>
   <link rel="stylesheet" href="<?= $root_path ?>style.css">
+<?php if (!empty($body_class)): ?>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="<?= $root_path ?>assets/home.css">
+<?php if (!empty($show_intro)): ?>
+  <link rel="stylesheet" href="<?= $root_path ?>assets/intro.css">
+<?php endif; ?>
+<?php if (!empty($show_video)): ?>
+  <link rel="stylesheet" href="<?= $root_path ?>assets/scrollvideo.css">
+<?php endif; ?>
+<?php endif; ?>
 </head>
-<body>
+<body<?= !empty($body_class) ? ' class="' . htmlspecialchars($body_class) . '"' : '' ?>>
   <header class="site-header">
     <div class="nav-container">
       <a href="<?= $root_path ?>index.php" class="brand-logo">STADIUM<span>PASS</span></a>
